@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="POP3_Client" default="default" basedir=".">
-    <description>Builds, tests, and runs the project POP3_Client.</description>
+<project name="Mail_Client_-_POP3_SMTP" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Mail Client - POP3 SMTP.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="POP3_Client-impl.jar">
+        <target name="run" depends="Mail_Client_-_POP3_SMTP-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>
