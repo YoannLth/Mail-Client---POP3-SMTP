@@ -23,7 +23,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import pop3_client.Model.Client;
-import pop3_client.Model.Connexion;
 import pop3_client.Model.Context;
 import pop3_client.utils.utils;
 import static pop3_client.utils.utils.*;
@@ -69,9 +68,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
 
         connectButton = new javax.swing.JButton();
         serverTextField = new javax.swing.JTextField();
-        portTextField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         userTextField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -99,15 +96,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
 
         serverTextField.setMinimumSize(new java.awt.Dimension(100, 260));
 
-        portTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portTextFieldActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("Server");
-
-        jLabel2.setText("Port");
 
         jLabel3.setText("User");
 
@@ -202,19 +191,15 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(serverTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                                .addComponent(serverTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(userTextField)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(passwordTextField))
+                                .addComponent(userTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passwordTextField)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(connectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -224,7 +209,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jSeparator1)
@@ -242,8 +227,6 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(connectButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -270,20 +253,15 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_portTextFieldActionPerformed
-
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
         Context.getInstance().setIp(serverTextField.getText());
-        Context.getInstance().setPort(Integer.parseInt(portTextField.getText()));
+        Context.getInstance().setPort(1024);
         Context.getInstance().connect();
         
         String response = Context.getInstance().receiveCommand();
         
         if(!utils.isError(response)) {
             serverTextField.setEnabled(false);
-            portTextField.setEnabled(false);
             connectButton.setEnabled(false);
 
             userTextField.setEnabled(true);
@@ -496,7 +474,6 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     private javax.swing.JButton connectUserPasswordButton;
     private javax.swing.JButton delButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
@@ -507,7 +484,6 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     private javax.swing.JTable mailsTableView;
     private javax.swing.JTextArea outputTextView;
     private javax.swing.JTextField passwordTextField;
-    private javax.swing.JTextField portTextField;
     private javax.swing.JButton resetButton;
     private javax.swing.JTextField serverTextField;
     private javax.swing.JTextField userTextField;
