@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import pop3_client.Model.Client;
 import pop3_client.Model.ContextPOP3;
+import pop3_client.Model.ContextSMTP;
 import pop3_client.utils.utils;
 import static pop3_client.utils.utils.*;
 
@@ -270,19 +271,24 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         ContextPOP3.getInstance().setPort(1024);
         ContextPOP3.getInstance().connect();
         
-        String response = ContextPOP3.getInstance().receiveCommand();
+        ContextSMTP.getInstance().setIp(serverTextField.getText());
+        ContextSMTP.getInstance().setPort(1025);
+        ContextSMTP.getInstance().connect();
         
-        if(!utils.isError(response)) {
+        String responsePOP3 = ContextPOP3.getInstance().receiveCommand();
+        String responseSMTP = ContextSMTP.getInstance().receiveCommand();        
+        
+        if(!utils.isErrorPOP3(responsePOP3) && !utils.isErrorSMTP(responseSMTP)) {
             serverTextField.setEnabled(false);
             connectButton.setEnabled(false);
 
             userTextField.setEnabled(true);
             passwordTextField.setEnabled(true);
             connectUserPasswordButton.setEnabled(true);
-            ContextPOP3.getInstance().setTimestamp(utils.getTimestamp(response));
+            ContextPOP3.getInstance().setTimestamp(utils.getTimestamp(responsePOP3));
         }
         
-        writeServerResponse(response);
+        writeServerResponse(responsePOP3);
     }//GEN-LAST:event_connectButtonActionPerformed
 
     public void writeServerResponse(String response) {
@@ -321,7 +327,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
             
             writeServerResponse(response);
             
-            if(!utils.isError(response)){
+            if(!utils.isErrorPOP3(response)){
                 userTextField.setEnabled(false);
                 passwordTextField.setEnabled(false);
                 connectUserPasswordButton.setEnabled(false);
@@ -355,7 +361,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
         
-        if(!utils.isError(response)) {
+        if(!utils.isErrorPOP3(response)) {
             resetButton.setText("Reset (0)");
         }
     }
@@ -366,7 +372,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
 
-        if(!utils.isError(response)){
+        if(!utils.isErrorPOP3(response)){
             int nbMessages = utils.getNbMessages(response);
             
             for(int i = 1; i <= nbMessages; i++) {
@@ -390,7 +396,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
-        if(!utils.isError(response)) {
+        if(!utils.isErrorPOP3(response)) {
             DefaultTableModel model = (DefaultTableModel) mailsTableView.getModel();
             
             deletedMails.put("" + id, new HashMap<String, String>());
@@ -418,7 +424,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
-        if(!utils.isError(response)) {
+        if(!utils.isErrorPOP3(response)) {
             DefaultTableModel model = (DefaultTableModel) mailsTableView.getModel();
             
             for(Map.Entry<String, HashMap<String, String>> entry : deletedMails.entrySet()) {
@@ -436,7 +442,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }
     
     public void storeMailsInfos(int id, String rep) {
-        if(!utils.isError(rep)) {
+        if(!utils.isErrorPOP3(rep)) {
             String lines[] = rep.split("\\r?\\n");
             String output = "";
             for(int i = 1; i<lines.length; i++) {

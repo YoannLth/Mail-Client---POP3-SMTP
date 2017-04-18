@@ -57,6 +57,11 @@ public class NewMessageFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(mailBodyTextArea);
 
         sendMail.setText("Send");
+        sendMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMailActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,6 +108,10 @@ public class NewMessageFrame extends javax.swing.JFrame {
     private void recipientsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recipientsTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_recipientsTextFieldActionPerformed
+
+    private void sendMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sendMailActionPerformed
 
     /**
      * @param args the command line arguments

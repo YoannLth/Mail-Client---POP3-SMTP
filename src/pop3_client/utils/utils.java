@@ -27,7 +27,7 @@ public abstract class utils {
         return "";
     }
     
-    public static boolean isError(String response) {
+    public static boolean isErrorPOP3(String response) {
         String[] words = response.split(" ");
         String firstLine = words[0];
         String[] flWords = firstLine.split(" ");
@@ -37,6 +37,18 @@ public abstract class utils {
         }
         
         return false;
+    }
+    
+    public static boolean isErrorSMTP(String response) {
+        String[] words = response.split(" ");
+        String firstLine = words[0];
+        String[] flWords = firstLine.split(" ");
+        
+        if(flWords[0].equals("250") || flWords[0].equals("354") || flWords[0].equals("221") || flWords[0].equals("220")) {
+            return false;
+        }
+        
+        return true;
     }
     
     public static String getEncodedPassword(String ts, String pass) {
