@@ -22,24 +22,24 @@ import javax.net.ssl.SSLSocketFactory;
  *
  * @author yannick
  */
-public class Context
+public class ContextSMTP
 {
     private SSLSocket socket;
     private int port;
     private String ip;
     private String timestamp;
-    private static Context instance;
+    private static ContextSMTP instance;
     
-    public static Context getInstance()
+    public static ContextSMTP getInstance()
     {
-        if(Context.instance == null)
+        if(ContextSMTP.instance == null)
         {
-            Context.instance = new Context();
+            ContextSMTP.instance = new ContextSMTP();
         }
-        return Context.instance;
+        return ContextSMTP.instance;
     }
     
-    public Context()
+    public ContextSMTP()
     {
         
     }
@@ -136,7 +136,7 @@ public class Context
             this.socket.close();
         } catch (IOException ex)
         {
-            Logger.getLogger(Context.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ContextSMTP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }  
     

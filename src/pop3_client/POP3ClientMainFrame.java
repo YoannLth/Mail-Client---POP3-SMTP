@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
@@ -23,7 +24,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import pop3_client.Model.Client;
-import pop3_client.Model.Context;
+import pop3_client.Model.ContextPOP3;
 import pop3_client.utils.utils;
 import static pop3_client.utils.utils.*;
 
@@ -83,6 +84,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         delButton = new javax.swing.JButton();
         resetButton = new javax.swing.JButton();
+        newMessageButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -179,6 +181,13 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
             }
         });
 
+        newMessageButton.setText("New Message");
+        newMessageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMessageButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -218,7 +227,9 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 .addComponent(delButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resetButton)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(newMessageButton)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +253,8 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(delButton)
-                    .addComponent(resetButton))
+                    .addComponent(resetButton)
+                    .addComponent(newMessageButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -254,11 +266,11 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        Context.getInstance().setIp(serverTextField.getText());
-        Context.getInstance().setPort(1024);
-        Context.getInstance().connect();
+        ContextPOP3.getInstance().setIp(serverTextField.getText());
+        ContextPOP3.getInstance().setPort(1024);
+        ContextPOP3.getInstance().connect();
         
-        String response = Context.getInstance().receiveCommand();
+        String response = ContextPOP3.getInstance().receiveCommand();
         
         if(!utils.isError(response)) {
             serverTextField.setEnabled(false);
@@ -267,7 +279,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
             userTextField.setEnabled(true);
             passwordTextField.setEnabled(true);
             connectUserPasswordButton.setEnabled(true);
-            Context.getInstance().setTimestamp(utils.getTimestamp(response));
+            ContextPOP3.getInstance().setTimestamp(utils.getTimestamp(response));
         }
         
         writeServerResponse(response);
@@ -287,7 +299,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     
     public void sendRequest(String command) {
         writeClientCommand(command);
-        Context.getInstance().sendCommand(command);
+        ContextPOP3.getInstance().sendCommand(command);
     }
     
     private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
@@ -301,11 +313,11 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     private void connectUserPasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectUserPasswordButtonActionPerformed
         if ((!userTextField.getText().equals("")) && (!passwordTextField.getText().equals(""))) {
             String user = userTextField.getText();
-            String pass = utils.getEncodedPassword(Context.getInstance().getTimestamp(), passwordTextField.getText());
+            String pass = utils.getEncodedPassword(ContextPOP3.getInstance().getTimestamp(), passwordTextField.getText());
             
             sendRequest("APOP " + user + " " + pass);
             
-            String response = Context.getInstance().receiveCommand();
+            String response = ContextPOP3.getInstance().receiveCommand();
             
             writeServerResponse(response);
             
@@ -332,10 +344,15 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         launchReset();
     }//GEN-LAST:event_resetButtonActionPerformed
 
+    private void newMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMessageButtonActionPerformed
+        NewMessageFrame2 frame = new NewMessageFrame2();
+        frame.setVisible(true);
+    }//GEN-LAST:event_newMessageButtonActionPerformed
+
     public void launchStat() {
         sendRequest("STAT");
             
-        String response = Context.getInstance().receiveCommand();
+        String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
         
         if(!utils.isError(response)) {
@@ -346,7 +363,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     public void launchList() {
         sendRequest("LIST");
             
-        String response = Context.getInstance().receiveCommand();
+        String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
 
         if(!utils.isError(response)){
@@ -360,7 +377,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     
     public void launchRetr(int id) {
         sendRequest("RETR " + id);
-        String response = Context.getInstance().receiveRep();
+        String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
         HashMap<String, String> infos = utils.parseRetr(id, response);
@@ -370,7 +387,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     
     public void launchDel(int id) {
         sendRequest("DELE " + id);
-        String response = Context.getInstance().receiveRep();
+        String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
         if(!utils.isError(response)) {
@@ -398,7 +415,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     public void launchReset() {
         sendRequest("RSET");
         
-        String response = Context.getInstance().receiveRep();
+        String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
         if(!utils.isError(response)) {
@@ -482,6 +499,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea mailDetailsTextView;
     private javax.swing.JTable mailsTableView;
+    private javax.swing.JButton newMessageButton;
     private javax.swing.JTextArea outputTextView;
     private javax.swing.JTextField passwordTextField;
     private javax.swing.JButton resetButton;
