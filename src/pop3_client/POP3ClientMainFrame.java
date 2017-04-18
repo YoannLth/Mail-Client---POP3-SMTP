@@ -289,6 +289,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         }
         
         writeServerResponse(responsePOP3);
+        writeServerResponse(responseSMTP);
     }//GEN-LAST:event_connectButtonActionPerformed
 
     public void writeServerResponse(String response) {
