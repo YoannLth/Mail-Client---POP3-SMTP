@@ -94,7 +94,7 @@ public class ContextSMTP
     
     public void sendEndCommand()
     {
-        String cmd = ".";
+        String cmd = ".\r\n";
         
         try
         {
