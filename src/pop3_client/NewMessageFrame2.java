@@ -157,14 +157,61 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
             return;
         }
         
-        launchMail(mainFrame.getUser());
+        boolean error = true;
+        
+        if (launchMail(mainFrame.getUser()) != -1) {
+          for(int i=0; i<recipients.size(); i++) {
+              if (launchRcpt(recipients.get(i)) != -1) {
+                  error = false;
+              }
+          }
+        }
+        
+        if(!error) {
+            launchData();
+        } else {
+            return;
+        }
     }
 
-    public void launchMail(String from) {
+    public int launchMail(String from) {
         sendRequest("MAIL FROM: <" + from + ">");
         
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
+        
+        if(!utils.isErrorSMTP(response)){
+            JOptionPane.showMessageDialog(this, "Error : " + response);
+            return -1;
+        }
+        
+        return 0;
+    }
+    
+    public int launchRcpt(String rcpt) {
+        sendRequest("RCPT TO: <" + rcpt + ">");
+        
+        String response = ContextSMTP.getInstance().receiveRep();
+        mainFrame.writeServerResponse(response);
+        
+        if(!utils.isErrorSMTP(response)){
+            JOptionPane.showMessageDialog(this, "Error : " + response);
+            return -1;
+        }
+        
+        return 0;
+    }
+    
+    public void launchData() {
+        sendRequest("DATA");
+        
+        String response = ContextSMTP.getInstance().receiveRep();
+        mainFrame.writeServerResponse(response);
+        
+        if(!utils.isErrorSMTP(response)){
+            JOptionPane.showMessageDialog(this, "Error : " + response);
+            return;
+        }
     }
     
     public void sendRequest(String command) {
