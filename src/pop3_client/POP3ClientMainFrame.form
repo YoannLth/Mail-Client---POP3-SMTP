@@ -266,6 +266,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="resetButton">
       <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
         <Property name="label" type="java.lang.String" value="Reset (0)"/>
       </Properties>
       <Events>
@@ -275,6 +276,7 @@
     <Component class="javax.swing.JButton" name="newMessageButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="New Message"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="newMessageButtonActionPerformed"/>

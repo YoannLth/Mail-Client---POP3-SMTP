@@ -182,6 +182,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
             }
         });
 
+        resetButton.setEnabled(false);
         resetButton.setLabel("Reset (0)");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -190,6 +191,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         });
 
         newMessageButton.setText("New Message");
+        newMessageButton.setEnabled(false);
         newMessageButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newMessageButtonActionPerformed(evt);
@@ -339,6 +341,8 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 userTextField.setEnabled(false);
                 passwordTextField.setEnabled(false);
                 connectUserPasswordButton.setEnabled(false);
+                resetButton.setEnabled(true);
+                newMessageButton.setEnabled(true);
                 launchStat();
                 launchList();
                 
