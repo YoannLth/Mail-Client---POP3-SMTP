@@ -158,6 +158,11 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
             return;
         }
         
+        if (mailBodyTextArea.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please enter a mail body");
+            return;
+        }
+        
         boolean error = true;
         
         if (launchMail(mainFrame.getUser()) != -1) {
