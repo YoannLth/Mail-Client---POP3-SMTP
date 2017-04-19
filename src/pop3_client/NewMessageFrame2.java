@@ -180,7 +180,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
         
-        if(!utils.isErrorSMTP(response)){
+        if(utils.isErrorSMTP(response)){
             JOptionPane.showMessageDialog(this, "Error : " + response);
             return -1;
         }
@@ -194,7 +194,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
         
-        if(!utils.isErrorSMTP(response)){
+        if(utils.isErrorSMTP(response)){
             JOptionPane.showMessageDialog(this, "Error : " + response);
             return -1;
         }
@@ -208,7 +208,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
         
-        if(!utils.isErrorSMTP(response)){
+        if(utils.isErrorSMTP(response)) {
             JOptionPane.showMessageDialog(this, "Error : " + response);
             return;
         }
