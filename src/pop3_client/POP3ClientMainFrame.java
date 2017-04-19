@@ -313,9 +313,14 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         outputTextView.append("[CLIENT] : " + msg + "\n\n\n");
     }
     
-    public void sendRequest(String command) {
+    public void sendPOP3Request(String command) {
         writeClientCommand(command);
         ContextPOP3.getInstance().sendCommand(command);
+    }
+    
+    public void sendSMTPRequest(String command) {
+        writeClientCommand(command);
+        ContextSMTP.getInstance().sendCommand(command);
     }
     
     private void passwordTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordTextFieldActionPerformed
@@ -331,13 +336,16 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
             String user = userTextField.getText();
             String pass = utils.getEncodedPassword(ContextPOP3.getInstance().getTimestamp(), passwordTextField.getText());
             
-            sendRequest("APOP " + user + " " + pass);
+            sendPOP3Request("APOP " + user + " " + pass);
+            sendSMTPRequest("EHLO test.com");
+                    
+            String responsePOP3 = ContextPOP3.getInstance().receiveCommand();
+            String responseSMTP = ContextSMTP.getInstance().receiveCommand();
             
-            String response = ContextPOP3.getInstance().receiveCommand();
+            writeServerResponse(responsePOP3);
+            writeServerResponse(responseSMTP);
             
-            writeServerResponse(response);
-            
-            if(!utils.isErrorPOP3(response)){
+            if(!utils.isErrorPOP3(responsePOP3) && !utils.isErrorSMTP(responseSMTP)){
                 userTextField.setEnabled(false);
                 passwordTextField.setEnabled(false);
                 connectUserPasswordButton.setEnabled(false);
@@ -370,7 +378,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newMessageButtonActionPerformed
 
     public void launchStat() {
-        sendRequest("STAT");
+        sendPOP3Request("STAT");
             
         String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
@@ -381,7 +389,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }
     
     public void launchList() {
-        sendRequest("LIST");
+        sendPOP3Request("LIST");
             
         String response = ContextPOP3.getInstance().receiveCommand();
         writeServerResponse(response);
@@ -396,7 +404,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }
     
     public void launchRetr(int id) {
-        sendRequest("RETR " + id);
+        sendPOP3Request("RETR " + id);
         String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
@@ -406,7 +414,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }
     
     public void launchDel(int id) {
-        sendRequest("DELE " + id);
+        sendPOP3Request("DELE " + id);
         String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
         
@@ -429,11 +437,11 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }
     
     public void launchQuit() {
-        sendRequest("QUIT");
+        sendPOP3Request("QUIT");
     }
     
     public void launchReset() {
-        sendRequest("RSET");
+        sendPOP3Request("RSET");
         
         String response = ContextPOP3.getInstance().receiveRep();
         writeServerResponse(response);
