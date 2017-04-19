@@ -173,6 +173,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
                 sendMail(objectTextField.getText(), mailBodyTextArea.getText());
             }
         } else {
+            JOptionPane.showMessageDialog(this, "None valid recipient");
             return;
         }
     }
@@ -223,7 +224,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         sendRequest("Date: " + Calendar.getInstance().getTime());
         sendRequest("Subject: " + object);
         sendRequest(body);
-        sendRequest(".");
+        sendEndRequest();
         
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
@@ -237,6 +238,10 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
     public void sendRequest(String command) {
         mainFrame.writeClientCommand(command);
         ContextSMTP.getInstance().sendCommand(command);
+    }
+    
+    public void sendEndRequest() {
+        ContextSMTP.getInstance().sendEndCommand();
     }
     
     /**

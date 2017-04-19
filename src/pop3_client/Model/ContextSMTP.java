@@ -92,6 +92,22 @@ public class ContextSMTP
         }
     }
     
+    public void sendEndCommand()
+    {
+        String cmd = ".";
+        
+        try
+        {
+            byte[] message = new byte[cmd.getBytes().length];
+            System.arraycopy(cmd.getBytes(), 0, message, 0, cmd.getBytes().length);
+            this.socket.getOutputStream().write(message);
+        } 
+        catch (IOException ex)
+        {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public String receiveCommand()
     {
         String rep = "";
