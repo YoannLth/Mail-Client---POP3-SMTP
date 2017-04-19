@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JFrame;
@@ -168,7 +169,9 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         }
         
         if(!error) {
-            launchData();
+            if (launchData() != -1) {
+                sendMail(objectTextField.getText(), mailBodyTextArea.getText());
+            }
         } else {
             return;
         }
@@ -202,8 +205,25 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         return 0;
     }
     
-    public void launchData() {
+    public int launchData() {
         sendRequest("DATA");
+        
+        String response = ContextSMTP.getInstance().receiveRep();
+        mainFrame.writeServerResponse(response);
+        
+        if(utils.isErrorSMTP(response)) {
+            JOptionPane.showMessageDialog(this, "Error : " + response);
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+    
+    public void sendMail(String object, String body) {
+        sendRequest("Date: " + Calendar.getInstance().getTime());
+        sendRequest("Subject: " + object);
+        sendRequest(body);
+        sendRequest(".");
         
         String response = ContextSMTP.getInstance().receiveRep();
         mainFrame.writeServerResponse(response);
