@@ -34,6 +34,9 @@ import static pop3_client.utils.utils.*;
  * @author yoannlathuiliere
  */
 public class POP3ClientMainFrame extends javax.swing.JFrame {
+    
+    private String user;
+    
     /**
      * Creates new form Main
      */
@@ -59,6 +62,10 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
 
     }
 
+    public String getUser() {
+        return this.user;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -300,7 +307,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
         outputTextView.append("[ERROR] : " + msg + "\n\n\n");
     }
     
-    private void writeClientCommand(String msg) {
+    public void writeClientCommand(String msg) {
         outputTextView.append("[CLIENT] : " + msg + "\n\n\n");
     }
     
@@ -334,6 +341,8 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 connectUserPasswordButton.setEnabled(false);
                 launchStat();
                 launchList();
+                
+                this.user = user;
             }   
         }
     }//GEN-LAST:event_connectUserPasswordButtonActionPerformed
@@ -352,7 +361,7 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void newMessageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMessageButtonActionPerformed
-        NewMessageFrame2 frame = new NewMessageFrame2();
+        NewMessageFrame2 frame = new NewMessageFrame2(this);
         frame.setVisible(true);
     }//GEN-LAST:event_newMessageButtonActionPerformed
 

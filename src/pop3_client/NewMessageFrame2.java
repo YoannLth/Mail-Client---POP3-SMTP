@@ -5,16 +5,57 @@
  */
 package pop3_client;
 
+import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import pop3_client.Model.ContextPOP3;
+import pop3_client.Model.ContextSMTP;
+import pop3_client.utils.utils;
+
 /**
  *
  * @author yoannlathuiliere
  */
 public class NewMessageFrame2 extends javax.swing.JDialog{
     
-    public NewMessageFrame2() {
+    private POP3ClientMainFrame mainFrame;
+    
+    public NewMessageFrame2(POP3ClientMainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+        
         initComponents();
         
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
+        recipientsTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (recipientsTextField.getText().equals("For multiple recipients, separate them with ';'")) {
+                    recipientsTextField.setText("");
+                    recipientsTextField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (recipientsTextField.getText().isEmpty()) {
+                    recipientsTextField.setForeground(Color.GRAY);
+                    recipientsTextField.setText("For multiple recipients, separate them with ';'");
+                }    
+            }
+        });
+        
+        sendMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMailActionPerformed(evt);
+            }
+        });
     }
     
     private void initComponents() {
@@ -89,8 +130,48 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
 
     private void recipientsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
-    }                                                   
+    }   
+    
+    private void sendMailActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        if (recipientsTextField.getText().equals("For multiple recipients, separate them with ';'") || recipientsTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please enter at least 2 recipients");
+            return;
+        }
+        
+        String[] recipientsTMP = recipientsTextField.getText().split(";");
+        ArrayList<String> recipients = new ArrayList<String>();
+                
+        for(int i=0; i<recipientsTMP.length; i++) {
+            if (!recipientsTMP[i].equals("") || !recipientsTMP[i].equals(" ")) {
+                recipients.add(recipientsTMP[i]);
+            }
+        }
+        
+        if (recipients.size() < 2) {
+            JOptionPane.showMessageDialog(this, "Please enter at least 2 recipients");
+            return;
+        }
+        
+        if (objectTextField.getText().equals("")) {
+            JOptionPane.showMessageDialog(this, "Please enter an object");
+            return;
+        }
+        
+        launchMail(mainFrame.getUser());
+    }
 
+    public void launchMail(String from) {
+        sendRequest("MAIL FROM: <" + from + ">");
+        
+        String response = ContextSMTP.getInstance().receiveRep();
+        mainFrame.writeServerResponse(response);
+    }
+    
+    public void sendRequest(String command) {
+        mainFrame.writeClientCommand(command);
+        ContextSMTP.getInstance().sendCommand(command);
+    }
+    
     /**
      * @param args the command line arguments
      */
