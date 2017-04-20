@@ -204,7 +204,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         mainFrame.writeServerResponse(response);
         
         if(utils.isErrorSMTP(response)){
-            JOptionPane.showMessageDialog(this, "Error : " + response);
+            JOptionPane.showMessageDialog(this, "Error : " + response + " " + rcpt);
             return -1;
         }
         
@@ -237,6 +237,9 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         if(utils.isErrorSMTP(response)) {
             JOptionPane.showMessageDialog(this, "Error : " + response);
             return;
+        } else {
+            JOptionPane.showMessageDialog(this, "Mail well sended!");
+            dispose();
         }
     }
     
