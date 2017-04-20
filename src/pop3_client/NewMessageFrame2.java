@@ -179,6 +179,7 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
             }
         } else {
             JOptionPane.showMessageDialog(this, "None valid recipient");
+            launchRSET();
             return;
         }
     }
@@ -195,6 +196,14 @@ public class NewMessageFrame2 extends javax.swing.JDialog{
         }
         
         return 0;
+    }
+    
+    public void launchRSET()
+    {
+        sendRequest("RSET");
+        
+        String response = ContextSMTP.getInstance().receiveRep();
+        mainFrame.writeServerResponse(response);
     }
     
     public int launchRcpt(String rcpt) {
