@@ -363,11 +363,12 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
     private void connectUserPasswordButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectUserPasswordButtonActionPerformed
         String password = String.valueOf(passwordTextField.getPassword());
         if ((!userTextField.getText().equals("")) && (!password.equals(""))) {
+   
             if(POP3Ready == false) {
-                String user = userTextField.getText();
+                String usr = userTextField.getText();
                 String pass = utils.getEncodedPassword(ContextPOP3.getInstance().getTimestamp(), password);
             
-                sendPOP3Request("APOP " + user + " " + pass);
+                sendPOP3Request("APOP " + usr + " " + pass);
                 
                 String responsePOP3 = ContextPOP3.getInstance().receiveCommand();
                 
@@ -375,6 +376,8 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 
                 if(!utils.isErrorPOP3(responsePOP3)){
                     POP3Ready = true;
+                    
+                    this.user = usr;
                 }
             }
             
@@ -401,8 +404,6 @@ public class POP3ClientMainFrame extends javax.swing.JFrame {
                 
                 launchStat();
                 launchList();
-
-                this.user = user;
             }  
         }
     }//GEN-LAST:event_connectUserPasswordButtonActionPerformed
